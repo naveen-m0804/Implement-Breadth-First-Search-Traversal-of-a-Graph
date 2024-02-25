@@ -70,35 +70,43 @@ Now, Queue becomes empty, So, terminate these process of iteration.
 ### Program 
 
 ```py
-from collections import deque
-from collections import defaultdict
+from collections import defaultdict, deque
 
-def bfs(graph,start,visited,path):
-    queue = deque()
-    path.append(start)
-    queue.append(start)
-    visited[start] = True
-    while len(queue) != 0:
-        tmpnode = queue.popleft()
-        for neighbour in graph[tmpnode]:
-            if visited[neighbour] == False:
-                path.append(neighbour)
-                queue.append(neighbour)
-                visited[neighbour] = True
-    return path
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    traversal_order = []
 
-graph = defaultdict(list)
-v,e = map(int,input().split())
-for i in range(e):
-    u,v = map(str,input().split())
-    graph[u].append(v)
-    graph[v].append(u)
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            traversal_order.append(node)
+            visited.add(node)
+            queue.extend(graph[node])
 
-start = 'A'
-path = []
-visited = defaultdict(bool)
-traversedpath = bfs(graph,start,visited,path)
-print(traversedpath)
+    return traversal_order
+
+def main():
+    # Getting input from the user
+    num_nodes, num_edges = map(int, input("Enter the number of nodes and edges (separated by space): ").split())
+
+    edges = []
+    print("Enter the edges (format: <node1> <node2>): ")
+    for _ in range(num_edges):
+        edge = input().split()
+        edges.append((edge[0], edge[1]))
+
+    graph = defaultdict(list)
+    for edge in edges:
+        graph[edge[0]].append(edge[1])
+        graph[edge[1]].append(edge[0])  # Assuming an undirected graph
+
+    start_node = input("Enter the starting node: ")
+    traversal_order = bfs(graph, start_node)
+    print("BFS Traversal Order:", traversal_order)
+
+if __name__ == "__main__":
+    main()
 ```
 <hr>
 <h3>Sample Input</h3>
